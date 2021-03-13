@@ -2,16 +2,21 @@ import java.util.*;
 
 public class Library {
     static class Node {
+    	private static int count = 0;
         private int value;
         private String name;
+        private int id;
 
         public Node(String name, int value) {
+        	this.id = count;
+        	count++;
             this.name = name;
             this.value = value;
         }
 
         public String getName() { return name; }
         public int getValue() { return value; }
+        public int getID() { return id; }
         public void setName(String s) { name = s; }
         public void setValue(int i) { value = i; }
         
@@ -227,7 +232,70 @@ class Graph {
 
 
 class Dijkstra {
+	Graph tarGraph;
+	int numberOfVertices;
+	int[] lastParents;
+	
+	public Dijkstra(Graph tarGraph) {
+		this.tarGraph = tarGraph;
+		this.numberOfVertices = tarGraph.size();
+		this.lastParents = new int[numberOfVertices];
+	}
+	
 
+	//Dijkstra's implemented from https://www.geeksforgeeks.org/printing-paths-dijkstras-shortest-path-algorithm/
+	public long dijkstra(Node start, Node end) {
+		//Standard Dijkstra's beginning.
+		//d is the distances from start to node n
+		int[] d = new int[numberOfVertices];
+		//parents is similar to unionfind, essentially points to who the parent of a certain node is.
+		int[] parents = new int[numberOfVertices];
+		//Visited is standard.
+		boolean[] visited = new boolean[numberOfVertices];
+		Arrays.fill(d, Integer.MAX_VALUE);
+		
+		d[start.getID()] = 0;
+		
+		for(int i = 0; i < numberOfVertices; i++) {
+			int u = minDistance(d, visited);
+			visited[u] = true;
+			
+			//Does Dijkstra's as it normall would.
+			for(int v = 0; v < numberOfVertices; v++) {
+				if(!visited[v] && distances[u][v] != 0 && 
+				        d[u] != Integer.MAX_VALUE && d[u] + distances[u][v] < d[v]) {
+					d[v] = d[u] + distances[u][v];
+					parents[v] = u;
+					
+				}
+			}
+		}
+		//Assigns parents to lastParents so we can access it outisde the function.
+		lastParents = parents;
+		return d[end.getID()];
+	}
+	
+	public int minDistance(int[] d, boolean[] visited) {
+		long min = Integer.MAX_VALUE;
+		int min_index = 0;
+		
+		for(int v = 0; v < numberOfVertices; v++) 
+			if(!visited[v] && d[v] <= min){
+		        min = d[v];
+				min_index = v;
+			}
+		return min_index;
+	}
+	
+	//This would be used if the nodes each had a value. (Think of Counting Gold)
+	//Specific use case. Implement when necessary.
+	/*
+	public long getDistance(Node s, Node n, int[] p) {
+		if(n.getID() == s.getID()) {
+			return nodes.get(s.id).kilos;
+		}
+		return nodes.get(n).value + getKilos(p[n], p);
+	}*/
 }
 
 class Prims {
