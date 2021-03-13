@@ -14,6 +14,22 @@ public class Library {
         public int getValue() { return value; }
         public void setName(String s) { name = s; }
         public void setValue(int i) { value = i; }
+        
+        @Override
+        public boolean equals(Object o) {
+            if(o == this) {
+                return true;
+            }
+        
+            if(!(o instanceof Node)) {
+                return false;
+            }
+        
+            Node x = (Node) o;
+        
+            return Integer.compare(value, x.value);
+        
+        }
     }
 
     static class Kruskals {
@@ -132,16 +148,67 @@ public class Library {
 }
 
 class Graph {
+    private ArrayList<ArrayList<Node>> adjList;
+
+    public Graph() {
+
+    }
+
+    void addNode(Node n) {
+
+    }
+
+    void removeNode(Node n) {
+
+    }
+
+    void addEdge(int u, int v) {
+        
+    }
+
+    void removeEdge(int u, int v) {
+
+    }
+
+    boolean isCyclic() {
+
+    }
+
+    boolean isConnected() {
+
+    }
+    
+        /**
+     * simple graph BFS that uses a visited array to avoid processing a node more than once
+     * @param start starting node for the BFS
+     * @param N number of nodes in graph to search
+     */
+     private void BFS(Node start, int size) {
+
+     Queue<Node> q = new LinkedList<>();
+     boolean visited[] = new boolean[N];
+     q.add(s);
+     visited[s] = true;
+
+     while (!q.isEmpty()) {
+         Node next = q.poll();
+         if(!next.adj.isEmpty()) {
+             for(Node neighbor : next.adj) {
+                 if(!visited[neighbor]) {
+                     visited[neighbor] = true;
+                     q.add(neighbor);
+                 }
+             }
+         }
+     }
+ }
+    
+    private void DFS() {
+    }
 
 }
 
-class BFS {
 
-}
-
-class DFS {
-
-}
 
 class Dijkstra {
 
