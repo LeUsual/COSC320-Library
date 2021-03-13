@@ -178,12 +178,12 @@ class Graph {
 
     }
     
-        /**
+     /**
      * simple graph BFS that uses a visited array to avoid processing a node more than once
-     * @param start starting node for the BFS
+     * @param s starting node for the BFS
      * @param N number of nodes in graph to search
      */
-     private void BFS(Node start, int size) {
+     private void BFS(int s, int N) {
 
      Queue<Node> q = new LinkedList<>();
      boolean visited[] = new boolean[N];
@@ -203,7 +203,23 @@ class Graph {
      }
  }
     
-    private void DFS() {
+    /**
+     * simple graph DFS using a Stack instead of recursion
+     * @param s starting node's index for the DFS
+     */
+    private void DFS(int s) {
+        Stack<Integer> stack = new Stack<Integer>();
+        boolean[] visited = new boolean[adjList.size()]
+        stack.push(s);
+        while(!stack.isEmpty()) {
+            int current = stack.pop();
+            visited[current] = true;
+            for(int neighbor : adjList.get(current).adj) {
+                if(!visited[neighbor]) {
+                    stack.push(neighbor);
+                }
+            }
+        }
     }
 
 }
