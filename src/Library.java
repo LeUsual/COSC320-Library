@@ -536,7 +536,16 @@ static class Graph {
         g.addEdge(a1, c3);
         g.addEdge(e5, b2);
         g.addEdge(c3, d4);
-        g.DFS(a1.id);
+        //g.DFS(a1.id);
+        
+        int numNodes = 4;
+        int numEdge= 6;
+        int gNodes, List<Integer> source, List<Integer> destination, List<Integer> weight
+        ArrayList<Integer> s = new ArrayList<>(), d = new ArrayList<>(), weight = new ArrayList<>();
+        
+        
+        
+        
         
     }
 }
