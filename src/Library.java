@@ -1,6 +1,8 @@
+package LabExam;
+
 import java.util.*;
 
-public class Library {
+public class Algorithms {
     static class Node implements Comparator<Node> {
         public static int count = 0;
         public int value;
@@ -69,7 +71,7 @@ public class Library {
          * Kruskal's algorithm. A priority queue is generated that is sorted upon edge weights. All elements are assigned
          * to be their own parent, then union-find is run on the priority queue. Note that no more than n - 1 edges are
          * necessary to create the minimum spanning tree for a graph of n nodes.
-         * @param gNodes graph containing the nodes
+         * @param gNodes number of nodes in the graph
          * @param source source node
          * @param destination destination node
          * @param weight edge weight between source and destination
@@ -152,7 +154,7 @@ public class Library {
         }
     }
 
-    static class Graph {
+static class Graph {
         public ArrayList<ArrayList<Node>> adjList;
         public Map<Node, Map<Node, Integer>> weightsList;
         public ArrayList<Node> nodes;
@@ -162,6 +164,9 @@ public class Library {
             this.numOfNodes = numOfNodes;
             nodes = new ArrayList<>();
             weightsList = new HashMap<>();
+            adjList = new ArrayList<>();
+            for(int i = 0; i < numOfNodes; i++)
+            	adjList.add(new ArrayList<Node>());
         }
 
         void addNode(Node n) {
@@ -241,14 +246,15 @@ public class Library {
          * @param s starting node for the BFS
          * @param N number of nodes in graph to search
          */
-        private void BFS(int s, int N) {
+        private void BFS(int s) {
             Queue<Integer> q = new LinkedList<>();
-            boolean[] visited = new boolean[N];
+            boolean[] visited = new boolean[numOfNodes];
             q.add(s);
             visited[s] = true;
 
             while (!q.isEmpty()) {
                 int next = q.poll();
+                System.out.println(next);
                 if(!adjList.get(next).isEmpty()) {
                     for(Node neighbor : adjList.get(next)) {
                         if(!visited[neighbor.id]) {
@@ -270,6 +276,7 @@ public class Library {
             stack.push(s);
             while(!stack.isEmpty()) {
                 int current = stack.pop();
+                System.out.println(current);
                 visited[current] = true;
                 for(Node neighbor : adjList.get(current)) {
                     if(!visited[neighbor.id]) {
@@ -515,12 +522,36 @@ public class Library {
         graph.add(d);
         graph.add(e);
 
-        Prim prim = new Prim(graph);
-        prim.run();
+        //Prim prim = new Prim(graph);
+        //prim.run();
 
-        System.out.println(prim.minimumSpanningTreeToString());
+        Graph g = new Graph(5);
+        Node a1 = new Node("0", 0);
+        Node b2 = new Node("1", 1);
+        Node c3 = new Node("2", 2);
+        Node d4 = new Node("3", 3);
+        Node e5 = new Node("4", 4);
+        g.addNode(a1);
+        g.addNode(b2);
+        g.addNode(c3);
+        g.addNode(d4);
+        g.addNode(e5);
+        g.addEdge(a1, e5);
+        g.addEdge(a1, c3);
+        g.addEdge(e5, b2);
+        g.addEdge(c3, d4);
+        //g.DFS(a1.id);
+        
+        int numNodes = 4;
+        int numEdge= 6;
+        int gNodes, List<Integer> source, List<Integer> destination, List<Integer> weight
+        ArrayList<Integer> s = new ArrayList<>(), d = new ArrayList<>(), weight = new ArrayList<>();
+        
+        
+        
+        
+        
     }
-
 }
 
 
