@@ -1,4 +1,7 @@
 import java.util.*;
+import javafx.util.Pair;
+
+import org.w3c.dom.Node;
 
 public class Library {
     static class Node {
@@ -6,6 +9,7 @@ public class Library {
         private int value;
         private String name;
         private int id;
+        public boolean isVisited = false;
 
         public Node(String name, int value) {
         	this.id = count;
@@ -34,6 +38,25 @@ public class Library {
         
             return Integer.compare(value, x.value);
         
+        }
+        
+        public Pair nextMinimum() {
+            Integer nextMinimum = Integer.MAX_VALUE;
+            Node nextNode = this;
+            Iterator<Map.Entry<Vertex,Edge>> it = edges.entrySet()
+                .iterator();
+            while (it.hasNext()) {
+                Map.Entry<Vertex,Edge> pair = it.next();
+                if (!pair.getKey().isVisited()) {
+                    if (!pair.getValue().isIncluded()) {
+                        if (pair.getValue().getWeight() < nextMinimum.getWeight()) {
+                            nextMinimum = pair.getValue();
+                            nextVertex = pair.getKey();
+                        }
+                    }
+                }
+            }
+            return new Pair<>(nextVertex, nextMinimum);
         }
     }
 
@@ -153,35 +176,87 @@ public class Library {
 }
 
 class Graph {
-    private ArrayList<ArrayList<Node>> adjList;
+    public ArrayList<Map<Node, Integer>> adjList;
+    public ArrayList<Node> nodes;
+    public int numOfNodes;
 
-    public Graph() {
+    public Graph(int numOfNodes) {
+    	this.numOfNodes = numOfNodes
+    	nodes = new ArrayList<>();
 
     }
 
     void addNode(Node n) {
+    	nodes.add(n);
 
     }
 
     void removeNode(Node n) {
-
+    	nodes.remove(n);
+    }
+    
+    void addEdge(Node u, Node v, Integer weight) {
+    	//This is for an undirected graph with weights.
+    	adjList.get(u).add(new Map(v, weight));
+    	adjList.get(v).add(new Map(u, weight));
     }
 
-    void addEdge(int u, int v) {
-        
+    void addEdge(Node u, Node v) {
+    	//This is for an undirected graph with no weights.
+    	adjList.get(u).add(v);
+    	adjList.get(v).add(u);
     }
 
     void removeEdge(int u, int v) {
-
+    	//This is for an undirected graph.
+    	adjList.get(u).remove(v);
+    	adjList.get(v).remove(u);
     }
 
-    boolean isCyclic() {
-
+    // actual checker to return results of DFS
+    boolean isCycle() {
+        boolean[] visited = new boolean[numOfNodes];
+        for (int i = 0; i < numOfNodes; i++) {
+            if (!visited[i]) {
+                if (hasCycle(i, visited, -1))
+                    return true;
+            }
+        }
+        return false;
+    }
+    
+    // DFS to progress through graph, accounts for self loops, connected graphs, and disconnected graphs
+    boolean hasCycle(int current, boolean[] visited, int parent) {
+        visited[current] = true;
+        for (int i = 0; i < adjList.get(current).size(); i++) {
+            int vertex = adjList.get(current).get(i);
+            if (vertex != parent)
+                if (visited[vertex]) return true;
+                else if (hasCycle(vertex, visited, current)) return true;
+        }
+        return false;
     }
 
     boolean isConnected() {
-
+    Stack<Node> stack = new Stack<Node>();
+    boolean[] visited = new boolean[adjList.size()]
+    stack.push(adjList.get(0).get(0));
+    
+    while(!stack.isEmpty()) {
+        Node current = stack.pop();
+        visited[current.id] = true;
+        for(Node neighbor : adjList.get(current)) {
+            if(!visited[neighbor.id]) {
+                stack.push(neighbor);
+            }
+        }
     }
+    for(int i = 0; i < visited.length; i++) {
+    	if(!visited[i])
+    		return false;
+    }
+    return true;
+}
     
      /**
      * simple graph BFS that uses a visited array to avoid processing a node more than once
@@ -297,9 +372,57 @@ class Dijkstra {
 		return nodes.get(n).value + getKilos(p[n], p);
 	}*/
 }
+// Prim's Implementation stolen from https://www.baeldung.com/java-prim-algorithm
 
-class Prims {
+publci class Pair{
+	Node n;
+	Integer edge;
+	
+	public Pair(Node n, Integer edge) {
+		this.n = n;
+		this.edge = edge;
+	}
+}
 
+public class Prim {
+    private Graph graph;
+    public int numNodes;
+
+    public Prim(Graph graph) {
+    	this.graph = graph;
+    	this.numNodes = graph.adjList.size();
+    		
+    }
+    
+    public void run() {
+        if (numNodes > 0) {
+            graph.get(0).setVisited(true);
+        }
+        while (isDisconnected()) {
+            Edge nextMinimum = new Edge(Integer.MAX_VALUE);
+            Node nextVertex = graph.nodes.get(0);
+            for (Node node: graph.nodes) {
+                if (Node.isVisited) {
+                    Pair candidate = node.nextMinimum();
+                    if (candidate.getValue().getWeight() < nextMinimum.getWeight()) {
+                        nextMinimum = candidate.getValue();
+                        nextVertex = candidate.getKey();
+                    }
+                }
+            }
+            nextMinimum.setIncluded(true);
+            nextNode.isVisited = true;
+        }
+    }
+    
+    private boolean isDisconnected() {
+        for (Node n : graph.nodes) {
+            if (n.isVisited) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
 
