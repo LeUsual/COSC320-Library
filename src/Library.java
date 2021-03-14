@@ -1,66 +1,70 @@
 import java.util.*;
-import javafx.util.Pair;
-
-import org.w3c.dom.Node;
 
 public class Library {
-    static class Node {
-    	private static int count = 0;
-        private int value;
-        private String name;
-        private int id;
+    static class Node implements Comparator<Node> {
+        public static int count = 0;
+        public int value;
+        public String name;
+        public int id;
         public boolean isVisited = false;
 
         public Node(String name, int value) {
-        	this.id = count;
-        	count++;
+            this.id = count;
+            count++;
             this.name = name;
             this.value = value;
         }
 
-        public String getName() { return name; }
-        public int getValue() { return value; }
-        public int getID() { return id; }
-        public void setName(String s) { name = s; }
-        public void setValue(int i) { value = i; }
-        
         @Override
-        public boolean equals(Object o) {
-            if(o == this) {
-                return true;
-            }
-        
-            if(!(o instanceof Node)) {
-                return false;
-            }
-        
-            Node x = (Node) o;
-        
-            return Integer.compare(value, x.value);
-        
+        public int compare(Node o1, Node o2) {
+            return Integer.compare(o1.value, o2.value);
         }
-        
-        public Pair nextMinimum() {
-            Integer nextMinimum = Integer.MAX_VALUE;
-            Node nextNode = this;
-            Iterator<Map.Entry<Vertex,Edge>> it = edges.entrySet()
-                .iterator();
-            while (it.hasNext()) {
-                Map.Entry<Vertex,Edge> pair = it.next();
-                if (!pair.getKey().isVisited()) {
-                    if (!pair.getValue().isIncluded()) {
-                        if (pair.getValue().getWeight() < nextMinimum.getWeight()) {
-                            nextMinimum = pair.getValue();
-                            nextVertex = pair.getKey();
-                        }
-                    }
-                }
-            }
-            return new Pair<>(nextVertex, nextMinimum);
-        }
+
+//        @Override
+//        public boolean equals(Object o) {
+//            if(o == this) {
+//                return true;
+//            }
+//
+//            if(!(o instanceof Node)) {
+//                return false;
+//            }
+//
+//            Node x = (Node) o;
+//
+//            return Integer.compare(value, x.value);
+//
+//        }
     }
 
     static class Kruskals {
+        /**
+         * Joins two disjoint sets based on their set representative (who's the ultimate parent of the set).
+         * Find the parents of both i and j, then join those two sets together so they have the same set representative.
+         * @param m map containing the two sets to join
+         * @param i member of set i to be joined
+         * @param j member of set j to be joined
+         */
+        public static void union(Map<Integer, Integer> m, int i, int j) {
+            int parentI = find(m, i);
+            int parentJ = find(m, j);
+            m.put(parentI, parentJ);
+        }
+
+        /**
+         * Finds the set representative of member i. While a member does not point to itself (therefore not the set
+         * representative), assign its parent as the the new current and repeat.
+         * @param m map containing elements i in the set for which to find the set representative
+         * @param i member i for which to find the set representative
+         * @return set representative of the set of which i is a member
+         */
+        public static int find(Map<Integer, Integer> m, int i) {
+            int curr = i;
+            while (m.get(curr) != curr)
+                curr = m.get(curr);
+            return curr;
+        }
+
         /**
          * Kruskal's algorithm. A priority queue is generated that is sorted upon edge weights. All elements are assigned
          * to be their own parent, then union-find is run on the priority queue. Note that no more than n - 1 edges are
@@ -131,35 +135,6 @@ public class Library {
         }
     }
 
-    static class UnionFind {
-        /**
-         * Joins two disjoint sets based on their set representative (who's the ultimate parent of the set).
-         * Find the parents of both i and j, then join those two sets together so they have the same set representative.
-         * @param m map containing the two sets to join
-         * @param i member of set i to be joined
-         * @param j member of set j to be joined
-         */
-        public static void union(Map<Integer, Integer> m, int i, int j) {
-            int parentI = find(m, i);
-            int parentJ = find(m, j);
-            m.put(parentI, parentJ);
-        }
-
-        /**
-         * Finds the set representative of member i. While a member does not point to itself (therefore not the set
-         * representative), assign its parent as the the new current and repeat.
-         * @param m map containing elements i in the set for which to find the set representative
-         * @param i member i for which to find the set representative
-         * @return set representative of the set of which i is a member
-         */
-        public static int find(Map<Integer, Integer> m, int i) {
-            int curr = i;
-            while (m.get(curr) != curr)
-                curr = m.get(curr);
-            return curr;
-        }
-    }
-
     static class ClosedFib {
         /**
          * Closed form formula to generate the nth number of the Fibonacci sequence.
@@ -169,201 +144,204 @@ public class Library {
         public static long fibClosed(int n) {
             double sqrt5 = Math.sqrt(5);
             double phi = (1.0 + sqrt5) / 2;
-            long fib = (long) ((Math.pow(phi, n) - (Math.pow(-phi, -n))) / (2 * phi - 1));
-            return fib;
+            return (long) ((Math.pow(phi, n) - (Math.pow(-phi, -n))) / (2 * phi - 1));
         }
     }
-}
 
-class Graph {
-    public ArrayList<Map<Node, Integer>> adjList;
-    public ArrayList<Node> nodes;
-    public int numOfNodes;
+    static class Graph {
+        public ArrayList<ArrayList<Node>> adjList;
+        public Map<Node, Map<Node, Integer>> weightsList;
+        public ArrayList<Node> nodes;
+        public int numOfNodes;
 
-    public Graph(int numOfNodes) {
-    	this.numOfNodes = numOfNodes
-    	nodes = new ArrayList<>();
+        public Graph(int numOfNodes) {
+            this.numOfNodes = numOfNodes;
+            nodes = new ArrayList<>();
+            weightsList = new HashMap<>();
+        }
 
-    }
+        void addNode(Node n) {
+            nodes.add(n);
+        }
 
-    void addNode(Node n) {
-    	nodes.add(n);
+        void removeNode(Node n) {
+            nodes.remove(n);
+        }
 
-    }
+        void addEdge(Node u, Node v, Integer weight) {
+            //This is for an undirected graph with weights.
+            weightsList.get(u).putIfAbsent(v, weight);
+            weightsList.get(v).putIfAbsent(u, weight);
+        }
 
-    void removeNode(Node n) {
-    	nodes.remove(n);
-    }
-    
-    void addEdge(Node u, Node v, Integer weight) {
-    	//This is for an undirected graph with weights.
-    	adjList.get(u).add(new Map(v, weight));
-    	adjList.get(v).add(new Map(u, weight));
-    }
+        void addEdge(Node u, Node v) {
+            //This is for an undirected graph with no weights.
+            adjList.get(u.id).add(v);
+            adjList.get(v.id).add(u);
+        }
 
-    void addEdge(Node u, Node v) {
-    	//This is for an undirected graph with no weights.
-    	adjList.get(u).add(v);
-    	adjList.get(v).add(u);
-    }
+        void removeEdge(int u, int v) {
+            //This is for an undirected graph.
+            adjList.get(u).remove(v);
+            adjList.get(v).remove(u);
+        }
 
-    void removeEdge(int u, int v) {
-    	//This is for an undirected graph.
-    	adjList.get(u).remove(v);
-    	adjList.get(v).remove(u);
-    }
-
-    // actual checker to return results of DFS
-    boolean isCycle() {
-        boolean[] visited = new boolean[numOfNodes];
-        for (int i = 0; i < numOfNodes; i++) {
-            if (!visited[i]) {
-                if (hasCycle(i, visited, -1))
-                    return true;
+        // actual checker to return results of DFS
+        boolean isCycle() {
+            boolean[] visited = new boolean[numOfNodes];
+            for (int i = 0; i < numOfNodes; i++) {
+                if (!visited[i]) {
+                    if (hasCycle(i, visited, -1))
+                        return true;
+                }
             }
+            return false;
         }
-        return false;
-    }
-    
-    // DFS to progress through graph, accounts for self loops, connected graphs, and disconnected graphs
-    boolean hasCycle(int current, boolean[] visited, int parent) {
-        visited[current] = true;
-        for (int i = 0; i < adjList.get(current).size(); i++) {
-            int vertex = adjList.get(current).get(i);
-            if (vertex != parent)
-                if (visited[vertex]) return true;
-                else if (hasCycle(vertex, visited, current)) return true;
-        }
-        return false;
-    }
 
-    boolean isConnected() {
-    Stack<Node> stack = new Stack<Node>();
-    boolean[] visited = new boolean[adjList.size()]
-    stack.push(adjList.get(0).get(0));
-    
-    while(!stack.isEmpty()) {
-        Node current = stack.pop();
-        visited[current.id] = true;
-        for(Node neighbor : adjList.get(current)) {
-            if(!visited[neighbor.id]) {
-                stack.push(neighbor);
-            }
-        }
-    }
-    for(int i = 0; i < visited.length; i++) {
-    	if(!visited[i])
-    		return false;
-    }
-    return true;
-}
-    
-     /**
-     * simple graph BFS that uses a visited array to avoid processing a node more than once
-     * @param s starting node for the BFS
-     * @param N number of nodes in graph to search
-     */
-     private void BFS(int s, int N) {
-
-     Queue<Node> q = new LinkedList<>();
-     boolean visited[] = new boolean[N];
-     q.add(s);
-     visited[s] = true;
-
-     while (!q.isEmpty()) {
-         Node next = q.poll();
-         if(!next.adj.isEmpty()) {
-             for(Node neighbor : next.adj) {
-                 if(!visited[neighbor]) {
-                     visited[neighbor] = true;
-                     q.add(neighbor);
-                 }
-             }
-         }
-     }
- }
-    
-    /**
-     * simple graph DFS using a Stack instead of recursion
-     * @param s starting node's index for the DFS
-     */
-    private void DFS(int s) {
-        Stack<Integer> stack = new Stack<Integer>();
-        boolean[] visited = new boolean[adjList.size()]
-        stack.push(s);
-        while(!stack.isEmpty()) {
-            int current = stack.pop();
+        // DFS to progress through graph, accounts for self loops, connected graphs, and disconnected graphs
+        boolean hasCycle(int current, boolean[] visited, int parent) {
             visited[current] = true;
-            for(int neighbor : adjList.get(current).adj) {
-                if(!visited[neighbor]) {
-                    stack.push(neighbor);
+            for (int i = 0; i < adjList.get(current).size(); i++) {
+                int vertex = adjList.get(current).get(i).id;
+                if (vertex != parent)
+                    if (visited[vertex]) return true;
+                    else if (hasCycle(vertex, visited, current)) return true;
+            }
+            return false;
+        }
+
+        boolean isConnected() {
+            Stack<Node> stack = new Stack<>();
+            boolean[] visited = new boolean[adjList.size()];
+            stack.push(adjList.get(0).get(0));
+
+            while(!stack.isEmpty()) {
+                Node current = stack.pop();
+                visited[current.id] = true;
+                for(Node neighbor : adjList.get(current.id)) {
+                    if(!visited[neighbor.id]) {
+                        stack.push(neighbor);
+                    }
+                }
+            }
+
+            for (boolean b : visited) {
+                if (!b)
+                    return false;
+            }
+            return true;
+        }
+
+        /**
+         * simple graph BFS that uses a visited array to avoid processing a node more than once
+         * @param s starting node for the BFS
+         * @param N number of nodes in graph to search
+         */
+        private void BFS(int s, int N) {
+            Queue<Integer> q = new LinkedList<>();
+            boolean[] visited = new boolean[N];
+            q.add(s);
+            visited[s] = true;
+
+            while (!q.isEmpty()) {
+                int next = q.poll();
+                if(!adjList.get(next).isEmpty()) {
+                    for(Node neighbor : adjList.get(next)) {
+                        if(!visited[neighbor.id]) {
+                            visited[neighbor.id] = true;
+                            q.add(neighbor.id);
+                        }
+                    }
                 }
             }
         }
+
+        /**
+         * simple graph DFS using a Stack instead of recursion
+         * @param s starting node's index for the DFS
+         */
+        private void DFS(int s) {
+            Stack<Integer> stack = new Stack<>();
+            boolean[] visited = new boolean[adjList.size()];
+            stack.push(s);
+            while(!stack.isEmpty()) {
+                int current = stack.pop();
+                visited[current] = true;
+                for(Node neighbor : adjList.get(current)) {
+                    if(!visited[neighbor.id]) {
+                        stack.push(neighbor.id);
+                    }
+                }
+            }
+        }
+
     }
 
-}
+    static class Dijkstra {
+        Graph tarGraph;
+        int numberOfVertices;
+        int[] lastParents;
 
+        public Dijkstra(Graph tarGraph) {
+            this.tarGraph = tarGraph;
+            this.numberOfVertices = tarGraph.adjList.size();
+            this.lastParents = new int[numberOfVertices];
+        }
 
+        //Dijkstra's implemented from https://www.geeksforgeeks.org/printing-paths-dijkstras-shortest-path-algorithm/
+        public long dijkstra(Node start, Node end) {
+            //Standard Dijkstra's beginning.
+            //d is the distances from start to node n
+            int[] d = new int[numberOfVertices];
 
-class Dijkstra {
-	Graph tarGraph;
-	int numberOfVertices;
-	int[] lastParents;
-	
-	public Dijkstra(Graph tarGraph) {
-		this.tarGraph = tarGraph;
-		this.numberOfVertices = tarGraph.size();
-		this.lastParents = new int[numberOfVertices];
-	}
-	
+            //parents is similar to union find, essentially points to who the parent of a certain node is.
+            int[] parents = new int[numberOfVertices];
 
-	//Dijkstra's implemented from https://www.geeksforgeeks.org/printing-paths-dijkstras-shortest-path-algorithm/
-	public long dijkstra(Node start, Node end) {
-		//Standard Dijkstra's beginning.
-		//d is the distances from start to node n
-		int[] d = new int[numberOfVertices];
-		//parents is similar to unionfind, essentially points to who the parent of a certain node is.
-		int[] parents = new int[numberOfVertices];
-		//Visited is standard.
-		boolean[] visited = new boolean[numberOfVertices];
-		Arrays.fill(d, Integer.MAX_VALUE);
-		
-		d[start.getID()] = 0;
-		
-		for(int i = 0; i < numberOfVertices; i++) {
-			int u = minDistance(d, visited);
-			visited[u] = true;
-			
-			//Does Dijkstra's as it normall would.
-			for(int v = 0; v < numberOfVertices; v++) {
-				if(!visited[v] && distances[u][v] != 0 && 
-				        d[u] != Integer.MAX_VALUE && d[u] + distances[u][v] < d[v]) {
-					d[v] = d[u] + distances[u][v];
-					parents[v] = u;
-					
-				}
-			}
-		}
-		//Assigns parents to lastParents so we can access it outisde the function.
-		lastParents = parents;
-		return d[end.getID()];
-	}
-	
-	public int minDistance(int[] d, boolean[] visited) {
-		long min = Integer.MAX_VALUE;
-		int min_index = 0;
-		
-		for(int v = 0; v < numberOfVertices; v++) 
-			if(!visited[v] && d[v] <= min){
-		        min = d[v];
-				min_index = v;
-			}
-		return min_index;
-	}
-	
-	//This would be used if the nodes each had a value. (Think of Counting Gold)
-	//Specific use case. Implement when necessary.
+            //Visited is standard.
+            boolean[] visited = new boolean[numberOfVertices];
+            Arrays.fill(d, Integer.MAX_VALUE);
+
+            d[start.id] = 0;
+
+            // Graph - weightsList = Map<Node, Map<Node, Integer>>
+            // Node - neighborWeights = HashMap<Node, Integer>
+
+            for(int i = 0; i < numberOfVertices; i++) {
+                int u = minDistance(d, visited);
+                Node nodeU = tarGraph.adjList.get(u).get(u);
+                visited[u] = true;
+
+                //Does Dijkstra's as it normally would.
+                for(int v = 0; v < numberOfVertices; v++) {
+                    Node nodeV = tarGraph.adjList.get(v).get(v);
+                    int currentEdge = tarGraph.weightsList.get(nodeU).get(nodeV);
+                    if(!visited[v] && currentEdge != 0 &&
+                            d[u] != Integer.MAX_VALUE && d[u] + currentEdge < d[v]) {
+                        d[v] = d[u] + currentEdge;
+                        parents[v] = u;
+
+                    }
+                }
+            }
+            //Assigns parents to lastParents so we can access it outisde the function.
+            lastParents = parents;
+            return d[end.id];
+        }
+
+        public int minDistance(int[] d, boolean[] visited) {
+            long min = Integer.MAX_VALUE;
+            int min_index = 0;
+
+            for(int v = 0; v < numberOfVertices; v++)
+                if(!visited[v] && d[v] <= min){
+                    min = d[v];
+                    min_index = v;
+                }
+            return min_index;
+        }
+
+        //This would be used if the nodes each had a value. (Think of Counting Gold)
+        //Specific use case. Implement when necessary.
 	/*
 	public long getDistance(Node s, Node n, int[] p) {
 		if(n.getID() == s.getID()) {
@@ -371,62 +349,173 @@ class Dijkstra {
 		}
 		return nodes.get(n).value + getKilos(p[n], p);
 	}*/
-}
-// Prim's Implementation stolen from https://www.baeldung.com/java-prim-algorithm
-
-publci class Pair{
-	Node n;
-	Integer edge;
-	
-	public Pair(Node n, Integer edge) {
-		this.n = n;
-		this.edge = edge;
-	}
-}
-
-public class Prim {
-    private Graph graph;
-    public int numNodes;
-
-    public Prim(Graph graph) {
-    	this.graph = graph;
-    	this.numNodes = graph.adjList.size();
-    		
     }
-    
-    public void run() {
-        if (numNodes > 0) {
-            graph.get(0).setVisited(true);
+
+    // Prim's Implementation stolen from https://www.baeldung.com/java-prim-algorithm
+    static class Prim {
+        public List<Vertex> graph;
+        public int numNodes;
+
+        public Prim (List<Vertex> graph) {
+            this.graph = graph;
         }
-        while (isDisconnected()) {
+
+        public void run() {
+            if (!graph.isEmpty()) graph.get(0).isVisited = true;
+            while (isDisconnected()) {
+                Edge nextMinimum = new Edge(Integer.MAX_VALUE);
+                Vertex nextVertex = graph.get(0);
+                for (Vertex vertex: graph) {
+                    if (vertex.isVisited) {
+                        Pair<Vertex, Edge> candidate = vertex.nextMinimum();
+                        if (candidate.edge.weight < nextMinimum.weight) {
+                            nextMinimum = candidate.edge;
+                            nextVertex = candidate.n;
+                        }
+                    }
+                }
+                nextMinimum.isIncluded = true;
+                nextVertex.isVisited = true;
+            }
+        }
+
+        private boolean isDisconnected() {
+            for (Vertex n : graph) {
+                if (!n.isVisited) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public String minimumSpanningTreeToString(){
+            StringBuilder sb = new StringBuilder();
+            for (Vertex vertex : graph){
+                sb.append(vertex.includedToString());
+            }
+            return sb.toString();
+        }
+    }
+
+    static class Pair<Vertex, Edge> {
+        Vertex n;
+        Edge edge;
+
+        public Pair(Vertex n, Edge edge) {
+            this.n = n;
+            this.edge = edge;
+        }
+    }
+
+    static class Vertex {
+        public String name;
+        public Map<Vertex, Edge> edges;
+        public boolean isVisited = false;
+
+        public Vertex(String name) {
+            this.name = name;
+            edges = new HashMap<>();
+        }
+
+        public Pair<Vertex, Edge> nextMinimum() {
             Edge nextMinimum = new Edge(Integer.MAX_VALUE);
-            Node nextVertex = graph.nodes.get(0);
-            for (Node node: graph.nodes) {
-                if (Node.isVisited) {
-                    Pair candidate = node.nextMinimum();
-                    if (candidate.getValue().getWeight() < nextMinimum.getWeight()) {
-                        nextMinimum = candidate.getValue();
-                        nextVertex = candidate.getKey();
+            Vertex nextVertex = this;
+            Iterator<Map.Entry<Vertex,Edge>> it = edges.entrySet()
+                    .iterator();
+            while (it.hasNext()) {
+                Map.Entry<Vertex,Edge> pair = it.next();
+                if (!pair.getKey().isVisited) {
+                    if (!pair.getValue().isIncluded) {
+                        if (pair.getValue().weight < nextMinimum.weight) {
+                            nextMinimum = pair.getValue();
+                            nextVertex = pair.getKey();
+                        }
                     }
                 }
             }
-            nextMinimum.setIncluded(true);
-            nextNode.isVisited = true;
+            return new Pair<>(nextVertex, nextMinimum);
         }
-    }
-    
-    private boolean isDisconnected() {
-        for (Node n : graph.nodes) {
-            if (n.isVisited) {
-                return true;
+
+        public String toString() {
+            return name;
+        }
+
+        public String includedToString(){
+            StringBuilder sb = new StringBuilder();
+            if (isVisited) {
+                Iterator<Map.Entry<Vertex,Edge>> it = edges.entrySet().iterator();
+                while (it.hasNext()) {
+                    Map.Entry<Vertex,Edge> pair = it.next();
+                    if (pair.getValue().isIncluded) {
+                        if (!pair.getValue().isPrinted) {
+                            sb.append(name);
+                            sb.append(" --- ");
+                            sb.append(pair.getValue().weight);
+                            sb.append(" --- ");
+                            sb.append(pair.getKey().name);
+                            sb.append("\n");
+                            pair.getValue().isPrinted = true;
+                        }
+                    }
+                }
             }
+            return sb.toString();
         }
-        return false;
     }
-}
 
+    static class Edge {
+        public int weight;
+        public boolean isIncluded = false;
+        public boolean isPrinted = false;
 
-class PowerSet {
+        public Edge(int weight) {
+            this.weight = weight;
+        }
+
+        public String toString() {
+            return "" + weight;
+        }
+    }
+
+    public static void main(String... args) {
+        List<Vertex> graph = new ArrayList<>();
+        Vertex a = new Vertex("A");
+        Vertex b = new Vertex("B");
+        Vertex c = new Vertex("C");
+        Vertex d = new Vertex("D");
+        Vertex e = new Vertex("E");
+
+        Edge ab = new Edge(2);
+        Edge ac = new Edge(3);
+        Edge be = new Edge(5);
+        Edge bc = new Edge(2);
+        Edge ce = new Edge(1);
+        Edge cd = new Edge(1);
+
+        a.edges.put(b, ab);
+        b.edges.put(a, ab);
+        a.edges.put(c, ac);
+        c.edges.put(a, ac);
+        b.edges.put(e, be);
+        e.edges.put(b, be);
+        b.edges.put(c, bc);
+        c.edges.put(b, bc);
+        c.edges.put(e, ce);
+        e.edges.put(c, ce);
+        c.edges.put(d, cd);
+        d.edges.put(c, cd);
+
+        graph.add(a);
+        graph.add(b);
+        graph.add(c);
+        graph.add(d);
+        graph.add(e);
+
+        Prim prim = new Prim(graph);
+        prim.run();
+
+        System.out.println(prim.minimumSpanningTreeToString());
+    }
 
 }
 
