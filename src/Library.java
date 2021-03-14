@@ -2,10 +2,10 @@ import java.util.*;
 
 public class Library {
     static class Node {
-    	private static int count = 0;
-        private int value;
-        private String name;
-        private int id;
+    	public static int count = 0;
+        public int value;
+        public String name;
+        public int id;
 
         public Node(String name, int value) {
         	this.id = count;
@@ -14,10 +14,6 @@ public class Library {
             this.value = value;
         }
 
-        public String getName() { return name; }
-        public int getValue() { return value; }
-        public int getID() { return id; }
-        public void setName(String s) { name = s; }
         public void setValue(int i) { value = i; }
         
         @Override
@@ -160,7 +156,7 @@ class Graph {
     }
 
     void addNode(Node n) {
-
+        adjList.add(n);
     }
 
     void removeNode(Node n) {
@@ -168,7 +164,7 @@ class Graph {
     }
 
     void addEdge(int u, int v) {
-        
+
     }
 
     void removeEdge(int u, int v) {
