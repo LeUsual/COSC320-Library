@@ -75,7 +75,7 @@ public class Library {
          * @param weight edge weight between source and destination
          * @return the magnitude of the weight of a minimum spanning tree
          */
-        public static int kruskals(int gNodes, List<Integer> source, List<Integer> destination, List<Integer> weight) {
+        public static int[][] kruskals(int gNodes, List<Integer> source, List<Integer> destination, List<Integer> weight) {
             // priority queue sorted on edge weights
             PriorityQueue<int[]> pq = new PriorityQueue<>((x,y)->x[2]-y[2]);
             HashMap<Integer, Integer> UFMap = new HashMap<>();
@@ -93,15 +93,19 @@ public class Library {
             // run Union-Find on priority queue
             int currentNumEdges = 0;
             int minWeight = 0;
+            int[][] path = new int[gNodes - 1][3];
             while (pq.size() > 0 && currentNumEdges < gNodes - 1) {
                 int[] currentEdge = pq.poll();
                 if (find(UFMap, currentEdge[0]) != find(UFMap, currentEdge[1])) {
                     union(UFMap, currentEdge[0], currentEdge[1]);
-                    currentNumEdges++;
                     minWeight += currentEdge[2];
+                    path[currentNumEdges][0] = currentEdge[0];
+                    path[currentNumEdges][1] = currentEdge[1];
+                    path[currentNumEdges][2] = currentEdge[2];
+                    currentNumEdges++;
                 }
             }
-            return minWeight;
+            return path;
         }
     }
 
