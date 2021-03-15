@@ -2,6 +2,10 @@ package LabExam;
 
 import java.util.*;
 
+//Created by Dakota Joiner, Krishan Hewitt, Keegan Pereira
+//COSC320 - Algorithms
+//This is meant for his lab exam.
+
 public class Algorithms {
     static class Node implements Comparator<Node> {
         public static int count = 0;
@@ -486,71 +490,6 @@ static class Graph {
         public String toString() {
             return "" + weight;
         }
-    }
-
-    public static void main(String... args) {
-        List<Vertex> graph = new ArrayList<>();
-        Vertex a = new Vertex("A");
-        Vertex b = new Vertex("B");
-        Vertex c = new Vertex("C");
-        Vertex d = new Vertex("D");
-        Vertex e = new Vertex("E");
-
-        Edge ab = new Edge(2);
-        Edge ac = new Edge(3);
-        Edge be = new Edge(5);
-        Edge bc = new Edge(2);
-        Edge ce = new Edge(1);
-        Edge cd = new Edge(1);
-
-        a.edges.put(b, ab);
-        b.edges.put(a, ab);
-        a.edges.put(c, ac);
-        c.edges.put(a, ac);
-        b.edges.put(e, be);
-        e.edges.put(b, be);
-        b.edges.put(c, bc);
-        c.edges.put(b, bc);
-        c.edges.put(e, ce);
-        e.edges.put(c, ce);
-        c.edges.put(d, cd);
-        d.edges.put(c, cd);
-
-        graph.add(a);
-        graph.add(b);
-        graph.add(c);
-        graph.add(d);
-        graph.add(e);
-
-        //Prim prim = new Prim(graph);
-        //prim.run();
-
-        Graph g = new Graph(5);
-        Node a1 = new Node("0", 0);
-        Node b2 = new Node("1", 1);
-        Node c3 = new Node("2", 2);
-        Node d4 = new Node("3", 3);
-        Node e5 = new Node("4", 4);
-        g.addNode(a1);
-        g.addNode(b2);
-        g.addNode(c3);
-        g.addNode(d4);
-        g.addNode(e5);
-        g.addEdge(a1, e5);
-        g.addEdge(a1, c3);
-        g.addEdge(e5, b2);
-        g.addEdge(c3, d4);
-        //g.DFS(a1.id);
-        
-        int numNodes = 4;
-        int numEdge= 6;
-        int gNodes, List<Integer> source, List<Integer> destination, List<Integer> weight
-        ArrayList<Integer> s = new ArrayList<>(), d = new ArrayList<>(), weight = new ArrayList<>();
-        
-        
-        
-        
-        
     }
 }
 
