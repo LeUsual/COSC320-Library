@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="570a2d5e-4af1-4613-82e6-33b470b94e44" name="Default Changelist" comment="fixed Prims, corrected errors in Graph (BFS, DFS), made some ugly ass accessors in Dijkstra's, changed addEdge methods in Graph" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1pl9w35kBteJ0ENoaa7mJrki1NZ" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Dakota\Desktop\OC Assignments\GitRepo\COSC320-Library\src" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="Library" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Library" />
+      <module name="COSC320-Library" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Library" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="570a2d5e-4af1-4613-82e6-33b470b94e44" name="Default Changelist" comment="" />
+      <created>1615747045768</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1615747045768</updated>
+      <workItem from="1615747048699" duration="8339000" />
+      <workItem from="1615758204896" duration="92000" />
+      <workItem from="1615820777892" duration="43000" />
+      <workItem from="1615820840424" duration="83000" />
+      <workItem from="1615821940273" duration="1213000" />
+      <workItem from="1615826407665" duration="647000" />
+      <workItem from="1615832648267" duration="11000" />
+      <workItem from="1615836268363" duration="132000" />
+      <workItem from="1615837301907" duration="14000" />
+    </task>
+    <task id="LOCAL-00001" summary="made vars public">
+      <created>1615749512347</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1615749512347</updated>
+    </task>
+    <task id="LOCAL-00002" summary="fixed Prims, corrected errors in Graph (BFS, DFS), made some ugly ass accessors in Dijkstra's, changed addEdge methods in Graph">
+      <created>1615755037334</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1615755037334</updated>
+    </task>
+    <task id="LOCAL-00003" summary="fixed Prims, corrected errors in Graph (BFS, DFS), made some ugly ass accessors in Dijkstra's, changed addEdge methods in Graph">
+      <created>1615758243561</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1615758243561</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="CUSTOM_BOOLEAN_PROPERTIES">
+                <map>
+                  <entry key="Show.Git.Branches" value="false" />
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="made vars public" />
+    <MESSAGE value="fixed Prims, corrected errors in Graph (BFS, DFS), made some ugly ass accessors in Dijkstra's, changed addEdge methods in Graph" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed Prims, corrected errors in Graph (BFS, DFS), made some ugly ass accessors in Dijkstra's, changed addEdge methods in Graph" />
+  </component>
+  <component name="XDebuggerManager">
+    <watches-manager>
+      <configuration name="Application">
+        <watch expression="c" />
+      </configuration>
+    </watches-manager>
+  </component>
+</project>

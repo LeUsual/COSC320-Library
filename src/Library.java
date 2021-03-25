@@ -158,140 +158,6 @@ public class Algorithms {
         }
     }
 
-static class Graph {
-        public ArrayList<ArrayList<Node>> adjList;
-        public Map<Node, Map<Node, Integer>> weightsList;
-        public ArrayList<Node> nodes;
-        public int numOfNodes;
-
-        public Graph(int numOfNodes) {
-            this.numOfNodes = numOfNodes;
-            nodes = new ArrayList<>();
-            weightsList = new HashMap<>();
-            adjList = new ArrayList<>();
-            for(int i = 0; i < numOfNodes; i++)
-            	adjList.add(new ArrayList<Node>());
-        }
-
-        void addNode(Node n) {
-            nodes.add(n);
-        }
-
-        void removeNode(Node n) {
-            nodes.remove(n);
-        }
-
-        void addEdge(Node u, Node v, Integer weight) {
-            //This is for an undirected graph with weights.
-            weightsList.get(u).putIfAbsent(v, weight);
-            weightsList.get(v).putIfAbsent(u, weight);
-        }
-
-        void addEdge(Node u, Node v) {
-            //This is for an undirected graph with no weights.
-            adjList.get(u.id).add(v);
-            adjList.get(v.id).add(u);
-        }
-
-        void removeEdge(int u, int v) {
-            //This is for an undirected graph.
-            adjList.get(u).remove(v);
-            adjList.get(v).remove(u);
-        }
-
-        // actual checker to return results of DFS
-        boolean isCycle() {
-            boolean[] visited = new boolean[numOfNodes];
-            for (int i = 0; i < numOfNodes; i++) {
-                if (!visited[i]) {
-                    if (hasCycle(i, visited, -1))
-                        return true;
-                }
-            }
-            return false;
-        }
-
-        // DFS to progress through graph, accounts for self loops, connected graphs, and disconnected graphs
-        boolean hasCycle(int current, boolean[] visited, int parent) {
-            visited[current] = true;
-            for (int i = 0; i < adjList.get(current).size(); i++) {
-                int vertex = adjList.get(current).get(i).id;
-                if (vertex != parent)
-                    if (visited[vertex]) return true;
-                    else if (hasCycle(vertex, visited, current)) return true;
-            }
-            return false;
-        }
-
-        boolean isConnected() {
-            Stack<Node> stack = new Stack<>();
-            boolean[] visited = new boolean[adjList.size()];
-            stack.push(adjList.get(0).get(0));
-
-            while(!stack.isEmpty()) {
-                Node current = stack.pop();
-                visited[current.id] = true;
-                for(Node neighbor : adjList.get(current.id)) {
-                    if(!visited[neighbor.id]) {
-                        stack.push(neighbor);
-                    }
-                }
-            }
-
-            for (boolean b : visited) {
-                if (!b)
-                    return false;
-            }
-            return true;
-        }
-
-        /**
-         * simple graph BFS that uses a visited array to avoid processing a node more than once
-         * @param s starting node for the BFS
-         * @param N number of nodes in graph to search
-         */
-        private void BFS(int s) {
-            Queue<Integer> q = new LinkedList<>();
-            boolean[] visited = new boolean[numOfNodes];
-            q.add(s);
-            visited[s] = true;
-
-            while (!q.isEmpty()) {
-                int next = q.poll();
-                System.out.println(next);
-                if(!adjList.get(next).isEmpty()) {
-                    for(Node neighbor : adjList.get(next)) {
-                        if(!visited[neighbor.id]) {
-                            visited[neighbor.id] = true;
-                            q.add(neighbor.id);
-                        }
-                    }
-                }
-            }
-        }
-
-        /**
-         * simple graph DFS using a Stack instead of recursion
-         * @param s starting node's index for the DFS
-         */
-        private void DFS(int s) {
-            Stack<Integer> stack = new Stack<>();
-            boolean[] visited = new boolean[adjList.size()];
-            stack.push(s);
-            while(!stack.isEmpty()) {
-                int current = stack.pop();
-                System.out.println(current);
-                visited[current] = true;
-                for(Node neighbor : adjList.get(current)) {
-                    if(!visited[neighbor.id]) {
-                        stack.push(neighbor.id);
-                    }
-                }
-            }
-        }
-
-    }
-
     static class Dijkstra {
         Graph tarGraph;
         int numberOfVertices;
@@ -491,6 +357,144 @@ static class Graph {
             return "" + weight;
         }
     }
+}
+
+class Graph {
+    public ArrayList<ArrayList<Node>> adjList;
+    public Map<Node, Map<Node, Integer>> weightsList;
+    public ArrayList<Node> nodes;
+    public int numOfNodes;
+
+    public Graph(int numOfNodes) {
+        this.numOfNodes = numOfNodes;
+        nodes = new ArrayList<>();
+        weightsList = new HashMap<>();
+        adjList = new ArrayList<>();
+        for(int i = 0; i < numOfNodes; i++)
+            adjList.add(new ArrayList<Node>());
+    }
+
+    void addNode(Node n) {
+        nodes.add(n);
+    }
+
+    void removeNode(Node n) {
+        nodes.remove(n);
+    }
+
+    void unidirectionalAddEdge(Node u, Node v) {
+        weightsList.get(u).put(v);
+    }
+
+    void addEdge(Node u, Node v, Integer weight) {
+        //This is for an undirected graph with weights.
+        weightsList.get(u).putIfAbsent(v, weight);
+        weightsList.get(v).putIfAbsent(u, weight);
+    }
+
+    void addEdge(Node u, Node v) {
+        //This is for an undirected graph with no weights.
+        adjList.get(u.id).add(v);
+        adjList.get(v.id).add(u);
+    }
+
+    void removeEdge(int u, int v) {
+        //This is for an undirected graph.
+        adjList.get(u).remove(v);
+        adjList.get(v).remove(u);
+    }
+
+    // actual checker to return results of DFS
+    boolean isCycle() {
+        boolean[] visited = new boolean[numOfNodes];
+        for (int i = 0; i < numOfNodes; i++) {
+            if (!visited[i]) {
+                if (hasCycle(i, visited, -1))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    // DFS to progress through graph, accounts for self loops, connected graphs, and disconnected graphs
+    boolean hasCycle(int current, boolean[] visited, int parent) {
+        visited[current] = true;
+        for (int i = 0; i < adjList.get(current).size(); i++) {
+            int vertex = adjList.get(current).get(i).id;
+            if (vertex != parent)
+                if (visited[vertex]) return true;
+                else if (hasCycle(vertex, visited, current)) return true;
+        }
+        return false;
+    }
+
+    boolean isConnected() {
+        Stack<Node> stack = new Stack<>();
+        boolean[] visited = new boolean[adjList.size()];
+        stack.push(adjList.get(0).get(0));
+
+        while(!stack.isEmpty()) {
+            Node current = stack.pop();
+            visited[current.id] = true;
+            for(Node neighbor : adjList.get(current.id)) {
+                if(!visited[neighbor.id]) {
+                    stack.push(neighbor);
+                }
+            }
+        }
+
+        for (boolean b : visited) {
+            if (!b)
+                return false;
+        }
+        return true;
+    }
+
+    /**
+     * simple graph BFS that uses a visited array to avoid processing a node more than once
+     * @param s starting node for the BFS
+     * @param N number of nodes in graph to search
+     */
+    private void BFS(int s) {
+        Queue<Integer> q = new LinkedList<>();
+        boolean[] visited = new boolean[numOfNodes];
+        q.add(s);
+        visited[s] = true;
+
+        while (!q.isEmpty()) {
+            int next = q.poll();
+            System.out.println(next);
+            if(!adjList.get(next).isEmpty()) {
+                for(Node neighbor : adjList.get(next)) {
+                    if(!visited[neighbor.id]) {
+                        visited[neighbor.id] = true;
+                        q.add(neighbor.id);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * simple graph DFS using a Stack instead of recursion
+     * @param s starting node's index for the DFS
+     */
+    private void DFS(int s) {
+        Stack<Integer> stack = new Stack<>();
+        boolean[] visited = new boolean[adjList.size()];
+        stack.push(s);
+        while(!stack.isEmpty()) {
+            int current = stack.pop();
+            System.out.println(current);
+            visited[current] = true;
+            for(Node neighbor : adjList.get(current)) {
+                if(!visited[neighbor.id]) {
+                    stack.push(neighbor.id);
+                }
+            }
+        }
+    }
+
 }
 
 
