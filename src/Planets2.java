@@ -1,7 +1,6 @@
 import java.util.*;
 
 public class Planets2 {
-
     public static void main(String... args) {
         Scanner in = new Scanner(System.in);
         int numTestCases = in.nextInt();
@@ -17,7 +16,17 @@ public class Planets2 {
                 planets.addNode(p);
             }
 
-            Dijkstra map = new Dijkstra(planets);
+            // set all distances to be infinity
+            for (int i = 0; i < planets.nodes.size(); i++) {
+                Node curr = planets.nodes.get(i);
+
+                for (Node neighbors : planets.nodes) {
+                    Map<Node, Integer> temp = new HashMap<>();
+                    temp.put(neighbors, Integer.MAX_VALUE);
+                    planets.weightsList.putIfAbsent(curr, temp);
+                }
+            }
+
             int numWormholes = in.nextInt();
 
             // add wormholes to graph with edge weights of 0
@@ -26,6 +35,14 @@ public class Planets2 {
                 Node p2 = getPlanet(in.next(), planets.nodes);
                 planets.unidirectionalAddEdgeWithWeights(p1, p2, 0);
             }
+
+            // set the Euclidean distance between all of the planets if they are not connected by a wormhole
+            for (int i = 0; i < planets.nodes.size(); i++) {
+                Node curr = planets.nodes.get(i);
+                for (Node neighbors : planets.nodes) setEuclideanDistance(curr, neighbors, planets);
+            }
+
+            Dijkstra map = new Dijkstra(planets);
 
             int numQueries = in.nextInt();
             // loop through queries for which to return the shortest distance
@@ -37,12 +54,19 @@ public class Planets2 {
                 Node p2 = getPlanet(destination, planets.nodes);
 
                 // use dijkstra's in here to determine shortest distance between chosen planets
-
+                assert p1 != null;
+                assert p2 != null;
                 System.out.println("The distance from " + source + " to " + destination + " is " + map.dijkstra(p1, p2) + " parsecs.");
             }
         }
     }
 
+    /**
+     * Calculates the Euclidean distance between two planets
+     * @param n1 first planet
+     * @param n2 second planet
+     * @return distance between the two planets using a 3-dimensional distance formula
+     */
     public static int distance(Node n1, Node n2) {
         double deltaX = Math.abs(n1.x - n2.x);
         double deltaY = Math.abs(n1.y - n2.y);
@@ -50,6 +74,12 @@ public class Planets2 {
         return (int)Math.floor(Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ));
     }
 
+    /**
+     * Sets the Euclidean distance between two planets in a graph.
+     * @param p1 first planet
+     * @param p2 second planet
+     * @param g graph that contains the planet Nodes
+     */
     public static void setEuclideanDistance(Node p1, Node p2, Graph g) {
         int distance = distance(p1, p2);
 
@@ -57,18 +87,27 @@ public class Planets2 {
 //        if (distance < g.weightsList.get(p1).get(p2) && g.weightsList.get(p1).get(p2) != 0) {
 
         // if there currently isn't a wormhole between these points, set the distance in both directions
-        if (g.weightsList.get(p1).get(p2) != 0) {
+        if (g.weightsList.get(p1).get(p2) == Integer.MAX_VALUE) {
             g.weightsList.get(p1).put(p2, distance);
             g.weightsList.get(p2).put(p1, distance);
         }
     }
 
+    /**
+     * Helper method to return a planet Node given a String name of the planet
+     * @param a String name of the planet
+     * @param planets array list containing all of the planets
+     * @return the Node object of the planet
+     */
     public static Node getPlanet(String a, ArrayList<Node> planets) {
         Node p1 = null;
         for (Node planet : planets) {
-            if (planet.name.equals(a)) p1 = planet;
+            if (planet.name.equals(a)) {
+                p1 = planet;
+                return p1;
+            }
         }
-        return p1;
+        return null;
     }
 }
 
@@ -190,8 +229,16 @@ class Graph {
         nodes.remove(n);
     }
 
+    /**
+     * Adds an edge in a single direction between two nodes with the given weight. Proceeds in the direction u -> v
+     * @param u first Node
+     * @param v second Node
+     * @param weight distance/edge weight in between the nodes
+     */
     void unidirectionalAddEdgeWithWeights(Node u, Node v, int weight) {
-        weightsList.get(u).putIfAbsent(v, weight);
+        Map<Node, Integer> temp = new HashMap<>();
+        temp.put(v, weight);
+        weightsList.put(u, temp);
     }
 
     void addEdge(Node u, Node v, Integer weight) {
