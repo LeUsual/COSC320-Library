@@ -40,7 +40,7 @@ public class Planets3 {
 				dist[planets.get(arr[0])][planets.get(arr[1])] = 0;
 			}
 			
-			smartDijkstras(dist);
+			dijkstras(dist);
 			
 			System.out.println("Case " + (i + 1) + ":");
 			int queries = Integer.parseInt(in.nextLine());
@@ -55,7 +55,7 @@ public class Planets3 {
 		}
 	}
 	
-	public static void smartDijkstras(double[][] d) {
+	public static void dijkstras(double[][] d) {
 		//int[][] d = {{0,1,2},{3,4,5},{6,8,7}};
 		/*Iteratively searches from origin to mid, then from mid to dest for all possible
 		 *planet traversal distances. [0][0] until [n][n] where n is the number of planets.
