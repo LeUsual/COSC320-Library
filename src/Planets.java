@@ -2,6 +2,16 @@ import java.util.*;
 
 // Use graph
 
+/*
+ * COSC320 - Algorithms
+ * Created in collaboration with:
+ *   - Dakota Joiner 
+ *   - Evan Mackinnon
+ *   - Lyndsey Wong
+ *   - Keegan Pereira
+ *   - Krishan Hewitt
+ */
+
 public class Planets {
 
     public static void main(String[] args) {

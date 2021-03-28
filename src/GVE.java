@@ -1,5 +1,15 @@
 import java.util.*;
 
+/*
+ * COSC320 - Algorithms
+ * Created in collaboration with:
+ *   - Dakota Joiner 
+ *   - Evan Mackinnon
+ *   - Lyndsey Wong
+ *   - Keegan Pereira
+ *   - Krishan Hewitt
+ */
+
 public class Solution {
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);

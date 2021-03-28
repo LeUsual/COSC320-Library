@@ -2,6 +2,16 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
 
+/*
+ * COSC320 - Algorithms
+ * Created in collaboration with:
+ *   - Dakota Joiner 
+ *   - Evan Mackinnon 
+ *   - Lyndsey Wong
+ *   - Keegan Pereira
+ *   - Krishan Hewitt
+ */
+
 public class rectangle {
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);

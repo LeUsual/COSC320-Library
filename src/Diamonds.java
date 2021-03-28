@@ -1,6 +1,16 @@
 import java.io.*;
 import java.util.*;
 
+/*
+ * COSC320 - Algorithms
+ * Created in collaboration with:
+ *   - Dakota Joiner 
+ *   - Evan Mackinnon
+ *   - Lyndsey Wong
+ *   - Keegan Pereira
+ *   - Krishan Hewitt
+ */
+
 public class Diamonds {
 
     public static void main(String[] args) {
